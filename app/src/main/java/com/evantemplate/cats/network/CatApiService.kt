@@ -1,0 +1,37 @@
+package com.evantemplate.cats.network
+
+import com.evantemplate.cats.models.Cat
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.reactivex.Flowable
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
+
+private const val BASE_URL = "https://api.thecatapi.com/v1/images/search/"
+
+private val moshi = Moshi.Builder()
+    .add(KotlinJsonAdapterFactory())
+    .build()
+
+private val retrofit = Retrofit.Builder()
+    .baseUrl(BASE_URL)
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+    .build()
+
+
+interface CatApiService{
+    @GET(".")
+    fun getCats(@Query("limit") limit: String,
+                @Query("page") page: String,
+                @Query("order") order: String): Flowable<List<Cat>>
+}
+
+object CatApi{
+    val retrofitService: CatApiService by lazy {
+        retrofit.create(CatApiService::class.java)
+    }
+}
