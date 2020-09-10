@@ -1,12 +1,15 @@
 package com.evantemplate.cats.models
 
-import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
+@Entity(tableName = "favorite_cats_table")
 data class Cat(
-
+    @PrimaryKey
     val id: String,
-    @Json(name = "url")val imgUrl: String
-): Parcelable {}
+    @Json(name = "url")
+    val imgUrl: String,
+){
+    var isInFavorites:Boolean = false
+}

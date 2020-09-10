@@ -26,11 +26,12 @@
                 app:imageUrl="@{Cat.imgUrl}"/>
 
             <Button
+                android:id="@+id/btn_fav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="170dp"
                 android:drawableEnd="@drawable/ic_baseline_favorite_border_24"
-                android:text="В избранное"
+                android:text="@string/btn_text_favorite"
                 android:textStyle="bold" />
 
     </androidx.cardview.widget.CardView>
