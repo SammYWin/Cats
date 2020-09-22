@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Cats</string>
+    <string name="bottom_title_cats">Коты</string>
+    <string name="bottom_title_favorites">Избранное</string>
+    <string name="fragment_label_cat_list">Коты</string>
+    <string name="fragment_label_favorite_cats">Избранное</string>
+    <string name="btn_text_favorite">В избранное</string>
+    <string name="btn_text_delete">Удалить</string>
+</resources>

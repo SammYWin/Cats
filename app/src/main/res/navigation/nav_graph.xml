@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/allCatsFragment">
+
+    <fragment
+        android:id="@+id/allCatsFragment"
+        android:name="com.evantemplate.cats.ui.CatListFragment"
+        android:label="@string/fragment_label_cat_list" />
+    <fragment
+        android:id="@+id/favoriteCatsFragment"
+        android:name="com.evantemplate.cats.ui.FavoriteCatsListFragment"
+        android:label="@string/fragment_label_favorite_cats" />
+</navigation>

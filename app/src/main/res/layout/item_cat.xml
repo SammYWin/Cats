@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <androidx.cardview.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp">
+
+        <ImageView
+            android:id="@+id/iv_cat"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            tools:src="@tools:sample/backgrounds/scenic"/>
+
+        <Button
+            android:id="@+id/btn_fav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="170dp"
+            android:drawableEnd="@drawable/ic_baseline_favorite_border_24"
+            android:text="@string/btn_text_favorite"
+            android:textStyle="bold" />
+
+</androidx.cardview.widget.CardView>
