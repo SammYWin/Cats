@@ -27,7 +27,7 @@ var gson = GsonBuilder()
 
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
-    .addConverterFactory(GsonConverterFactory.create(gson))
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
     .build()
 

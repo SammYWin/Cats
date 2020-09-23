@@ -29,80 +29,8 @@ class CatListFragment: MvpAppCompatFragment(), CatListView {
         val rootView = inflater.inflate(R.layout.fragment_cat_list, container, false)
 
         adapter = CatListAdapter(
-            { isOnLastPosition -> if (isOnLastPosition) presenter.loadMoreCats() },
-            { cat ->
-//                if (!cat.isInFavorites) viewModel.addToFavorites(cat)
-//                else viewModel.deleteFromFavorites(cat)
-/*                ImgCatApi.retrofitService.downloadImg()
-                    .enqueue(object : retrofit2.Callback<ResponseBody> {
-                        override fun onResponse(call: retrofit2.Call<ResponseBody>, response: Response<ResponseBody>
-                        ) {
-                            val path = requireContext().getExternalFilesDir(null)
-                            val file = File(path,"file_name.jpg")
-
-                            val bytes = response.body()!!.bytes()
-                            val image = requireContext().getDrawable(R.drawable.test)!!.toBitmap()
-                                //BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-
-                            val outputStream: OutputStream = FileOutputStream(file)
-                            image.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-
-//                            val inputStream = response.body()!!.byteStream()
-//
-//                            val fileReader = ByteArray(4096)
-//
-//                            while (true) {
-//                                val read = inputStream.read(fileReader)
-//                                if (read == -1) {
-//                                    Log.d("M_CatListFragment", "IMAGE DOWNLOADED")
-//                                    break
-//                                }
-//                                outputStream.write(fileReader, 0, read)
-//                            }
-
-                            outputStream.flush();
-                            outputStream.close()
-
-//                            try {
-//                                val apkFile: File = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!
-//                                val file = File(apkFile,"file_name.jpg")
-//
-//                                var inputStream: InputStream? = null
-//                                var outputStream: OutputStream? = null
-//
-//
-//                                try {
-//                                    inputStream = response.body()!!.byteStream()
-//                                    outputStream = FileOutputStream(file)
-//
-//                                    while (true) {
-//                                        val read = inputStream!!.read(fileReader)
-//                                        if (read == -1) {
-//                                            Log.d("M_CatListFragment", "IMAGE DOWNLOADED")
-//                                            break
-//                                        }
-//                                        outputStream.write(fileReader, 0, read)
-//                                        outputStream.flush()
-//                                    }
-//                                }catch (e: IOException){
-//                                    Log.d("M_CatListFragment", "ERROR DOWNLOAD IMAGE: $e")
-//                                } finally {
-//                                    if (inputStream != null) {
-//                                        inputStream.close();
-//
-//                                    }
-//
-//                                    if (outputStream != null) {
-//                                        outputStream.close();
-//                                    }
-//                                }
-//                            } catch (ex: Exception) {  Log.d("M_CatListFragment", "ERROR DOWNLOAD IMAGE: $ex")}
-                        }
-
-                        override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                        }
-                    })*/
-            }
+            { isOnLastPosition -> if (isOnLastPosition) presenter.loadCats() },
+            { cat -> presenter.addToFavoritesBtnPressed(cat)}
         )
 
         rootView.rv_cats_all.adapter = adapter
@@ -112,10 +40,6 @@ class CatListFragment: MvpAppCompatFragment(), CatListView {
 
     override fun showAllCats(catList: List<Cat>) {
         adapter.updateData(catList)
-    }
-
-    override fun addToFavorite() {
-        TODO("Not yet implemented")
     }
 
     @ProvidePresenter

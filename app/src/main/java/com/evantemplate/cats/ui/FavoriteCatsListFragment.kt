@@ -5,30 +5,52 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.evantemplate.cats.R
 import com.evantemplate.cats.adapters.CatListAdapter
 import com.evantemplate.cats.database.CatDatabase
+import com.evantemplate.cats.interactors.Interactor
+import com.evantemplate.cats.models.Cat
+import com.evantemplate.cats.network.CatApi
+import com.evantemplate.cats.presenters.FavoriteCatListPresenter
+import com.evantemplate.cats.repositories.DbCatsRepository
+import com.evantemplate.cats.repositories.NetCatsRepository
+import kotlinx.android.synthetic.main.fragment_favorite_cats_list.view.*
+import moxy.MvpAppCompatFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
-class FavoriteCatsListFragment: Fragment() {
+class FavoriteCatsListFragment: MvpAppCompatFragment(), FavoriteCatListView {
 
-//    private lateinit var binding: FragmentFavoriteCatsListBinding
-//
-//    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-//        binding = FragmentFavoriteCatsListBinding.inflate(inflater)
-//
-//        val application = requireNotNull(this.activity).application
-//
-//        val dataBase = CatDatabase.getInstance(application).catDao
-//
-//        val viewModel = FavCatListViewModel(dataBase)
-//
-//        binding.setLifecycleOwner(this)
-//
-//        binding.viewModel = viewModel
-//        binding.rvCatsFavorite.adapter = CatListAdapter(
-//            {},
-//            {cat -> viewModel.deleteFromFavorites(cat)}
-//        )
-//
-//        return binding.root
-//    }
+    @InjectPresenter
+    lateinit var presenter: FavoriteCatListPresenter
+    lateinit var adapter: CatListAdapter
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_favorite_cats_list, container, false)
+
+        adapter = CatListAdapter({},
+            {cat ->  presenter.deleteCatFromFav(cat)})
+
+        rootView.rv_cats_favorite.adapter = adapter
+
+        return rootView
+    }
+
+    override fun updateFavCatList(catList: List<Cat>) {
+        adapter.updateData(catList)
+    }
+
+
+    @ProvidePresenter
+    fun providePresenter(): FavoriteCatListPresenter{
+        val context = requireContext()
+        val dataBase = CatDatabase.getInstance(context).catDao
+
+        val netCatsRepository = NetCatsRepository(CatApi.retrofitService)
+        val dbCatsRepository = DbCatsRepository(dataBase)
+
+        val interactor = Interactor(netCatsRepository, dbCatsRepository)
+
+        return FavoriteCatListPresenter(interactor)
+    }
 }

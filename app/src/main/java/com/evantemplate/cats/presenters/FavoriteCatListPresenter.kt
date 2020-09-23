@@ -1,9 +1,10 @@
 package com.evantemplate.cats.presenters
 
 import android.util.Log
-import com.evantemplate.cats.ui.CatListView
 import com.evantemplate.cats.interactors.Interactor
 import com.evantemplate.cats.models.Cat
+import com.evantemplate.cats.ui.FavoriteCatListView
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -11,32 +12,37 @@ import moxy.InjectViewState
 import moxy.MvpPresenter
 
 @InjectViewState
-class CatListPresenter(val interactor: Interactor) : MvpPresenter<CatListView>() {
+class FavoriteCatListPresenter(val interactor: Interactor): MvpPresenter<FavoriteCatListView>() {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     override fun onFirstViewAttach() {
-        loadCats()
+        loadFavoriteCats()
     }
 
-    fun loadCats() {
-        interactor.getAllCats()
+    private fun loadFavoriteCats() {
+        interactor.getFavoriteCats()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { catList -> viewState.showAllCats(catList) },
-                { e -> Log.d("M_CatListViewModel", "$e") }
+                {catList ->
+                    viewState.updateFavCatList(catList)},
+                {e -> Log.d("M_CatListViewModel", "$e")}
             ).let {
                 compositeDisposable.add(it)
             }
     }
 
-    fun addToFavoritesBtnPressed(cat: Cat) {
-        interactor.addToFavorite(cat)
+    fun deleteCatFromFav(cat: Cat) {
+        interactor.deleteCatFromFav(cat)
+            .toSingle { true }
+            .flatMap {
+                interactor.getFavoriteCats()
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                {},
-                { e -> Log.d("M_CatListPresenter", "$e")}
+                {catList -> viewState.updateFavCatList(catList)},
+                {e -> Log.d("M_CatListViewModel", "$e")}
             ).let {
                 compositeDisposable.add(it)
             }

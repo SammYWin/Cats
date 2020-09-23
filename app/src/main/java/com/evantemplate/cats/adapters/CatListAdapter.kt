@@ -12,11 +12,10 @@ import com.evantemplate.cats.R
 import com.evantemplate.cats.models.Cat
 import kotlinx.android.synthetic.main.item_cat.view.*
 
-class CatListAdapter(val onLastPosition: (Boolean) -> Unit, val onClick: (Cat) -> Unit) :
+class CatListAdapter(val isOnLastPosition: (Boolean) -> Unit, val onClick: (Cat) -> Unit) :
     RecyclerView.Adapter<CatListAdapter.CatViewHolder>() {
 
     var items: List<Cat> = listOf()
-    private var updatedList = listOf<Cat>()
 
     override fun getItemCount(): Int = items.size
 
@@ -68,31 +67,25 @@ class CatListAdapter(val onLastPosition: (Boolean) -> Unit, val onClick: (Cat) -
             }
         }
 
-        onLastPosition(position == itemCount - 1)
+        isOnLastPosition(position == itemCount - 1)
     }
 
     fun updateData(data: List<Cat>) {
-        updatedList = items + data
-
         val diffCallBack = object : DiffUtil.Callback() {
-            override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean =
-                items[oldPos].id == updatedList[newPos].id
-
-            override fun areContentsTheSame(oldPos: Int, newPos: Int): Boolean =
-                items[oldPos] == updatedList[newPos]
-
+            override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean = items[oldPos].id == data[newPos].id
+            override fun areContentsTheSame(oldPos: Int, newPos: Int): Boolean = items[oldPos] == data[newPos]
             override fun getOldListSize(): Int = items.size
-            override fun getNewListSize(): Int = updatedList.size
+            override fun getNewListSize(): Int = data.size
         }
         val diffResult = DiffUtil.calculateDiff(diffCallBack)
-        items = updatedList
+        items = data
         diffResult.dispatchUpdatesTo(this)
     }
 
     class CatViewHolder(convertView: View) : RecyclerView.ViewHolder(convertView) {
         fun bind(cat: Cat, onClick: (Cat) -> Unit) {
             Glide.with(itemView.iv_cat.context)
-                .load(cat.url)
+                .load(cat.imgUrl)
                 .apply(
                     RequestOptions()
                         .placeholder(R.drawable.loading_animation)
@@ -104,16 +97,5 @@ class CatListAdapter(val onLastPosition: (Boolean) -> Unit, val onClick: (Cat) -
                 onClick(cat)
             }
         }
-    }
-
-    companion object DiffCallback : DiffUtil.ItemCallback<Cat>() {
-        override fun areItemsTheSame(oldItem: Cat, newItem: Cat): Boolean {
-            return oldItem === newItem
-        }
-
-        override fun areContentsTheSame(oldItem: Cat, newItem: Cat): Boolean {
-            return oldItem.id == newItem.id
-        }
-
     }
 }
