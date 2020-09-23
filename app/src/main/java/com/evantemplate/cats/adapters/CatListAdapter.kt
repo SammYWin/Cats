@@ -38,31 +38,29 @@ class CatListAdapter(val isOnLastPosition: (Boolean) -> Unit, val onClick: (Cat)
         )
 
         if (!cat.isInFavorites) {
-            holder.itemView.btn_fav.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null)
-            holder.itemView.btn_fav.text =
-                holder.itemView.context.getString(R.string.btn_text_favorite)
+            Glide.with(holder.itemView.btn_fav.context)
+                .load(img)
+                .into(holder.itemView.btn_fav)
         } else {
-            holder.itemView.btn_fav.setCompoundDrawablesWithIntrinsicBounds(
-                null,
-                null,
-                imgRed,
-                null
-            )
-            holder.itemView.btn_fav.text =
-                holder.itemView.context.getString(R.string.btn_text_delete)
+            Glide.with(holder.itemView.btn_fav.context)
+                .load(imgRed)
+                .into(holder.itemView.btn_fav)
         }
 
         holder.itemView.btn_fav.setOnClickListener {
             onClick(cat)
 
             if (!cat.isInFavorites) {
-                it.btn_fav.setCompoundDrawablesWithIntrinsicBounds(null, null, imgRed, null)
-                it.btn_fav.text = it.context.getString(R.string.btn_text_delete)
+                Glide.with(holder.itemView.btn_fav.context)
+                    .load(imgRed)
+                    .into(holder.itemView.btn_fav)
                 cat.isInFavorites = !cat.isInFavorites
             } else {
-                it.btn_fav.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null)
+                Glide.with(holder.itemView.btn_fav.context)
+                    .load(img)
+                    .into(holder.itemView.btn_fav)
                 if ((it.parent.parent as View).id == R.id.rv_cats_all)
-                    it.btn_fav.text = it.context.getString(R.string.btn_text_favorite)
+                   // it.btn_fav.text = it.context.getString(R.string.btn_text_favorite)
                 cat.isInFavorites = !cat.isInFavorites
             }
         }
