@@ -10,6 +10,5 @@ data class CatEntity(
     @PrimaryKey
     val id: String,
     val imgUrl: String,
-){
     var isInFavorites:Boolean = false
-}
+)

@@ -16,9 +16,9 @@ interface CatsRepository {
 
 class DbCatsRepository(val dataBase: CatDao) : CatsRepository {
     override fun loadFavCats(): Single<List<Cat>> = dataBase.getAllFavoriteCats()
-        .map { list -> list.map{ Cat(it.id, it.imgUrl) } }
+        .map { list -> list.map{ Cat(it.id, it.imgUrl, it.isInFavorites) } }
 
-    override fun addToFavorites(cat: Cat) = dataBase.insertCat(CatEntity(cat.id, cat.imgUrl))
+    override fun addToFavorites(cat: Cat) = dataBase.insertCat(CatEntity(cat.id, cat.imgUrl, cat.isInFavorites))
 
-    override fun deleteFromFavorites(cat: Cat) = dataBase.deleteCat(CatEntity(cat.id, cat.imgUrl))
+    override fun deleteFromFavorites(cat: Cat) = dataBase.deleteCat(CatEntity(cat.id, cat.imgUrl, cat.isInFavorites))
 }

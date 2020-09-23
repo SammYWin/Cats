@@ -18,7 +18,7 @@ class Interactor(
         .doOnNext {  list.addAll(it) }
         .map { list }
 
-    fun addToFavorite(cat: Cat) = dbRepo.addToFavorites(cat)
+    fun addToFavorite(cat: Cat) = dbRepo.addToFavorites(Cat(cat.id, cat.imgUrl, isInFavorites = true))
 
     fun getFavoriteCats() = dbRepo.loadFavCats()
     fun deleteCatFromFav(cat: Cat) = dbRepo.deleteFromFavorites(cat)

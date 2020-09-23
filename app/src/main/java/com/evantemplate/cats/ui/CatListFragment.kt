@@ -30,7 +30,9 @@ class CatListFragment: MvpAppCompatFragment(), CatListView {
 
         adapter = CatListAdapter(
             { isOnLastPosition -> if (isOnLastPosition) presenter.loadCats() },
-            { cat -> presenter.addToFavoritesBtnPressed(cat)}
+            { cat ->
+                if(!cat.isInFavorites) presenter.addToFavoritesBtnPressed(cat)
+            else presenter.deleteFromFavorite(cat)}
         )
 
         rootView.rv_cats_all.adapter = adapter

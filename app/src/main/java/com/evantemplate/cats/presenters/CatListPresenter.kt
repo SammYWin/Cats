@@ -42,6 +42,23 @@ class CatListPresenter(val interactor: Interactor) : MvpPresenter<CatListView>()
             }
     }
 
+    fun deleteFromFavorite(cat: Cat) {
+        //TODO not really working the way it should, need fix
+        interactor.deleteCatFromFav(cat)
+            .toSingle { true }
+            .flatMap {
+                interactor.getFavoriteCats()
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {catList -> viewState.showAllCats(catList)},
+                {e -> Log.d("M_CatListViewModel", "$e")}
+            ).let {
+                compositeDisposable.add(it)
+            }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
