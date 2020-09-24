@@ -1,22 +1,19 @@
 package com.evantemplate.cats.interactors
 
-import android.util.Log
 import com.evantemplate.cats.models.Cat
 import com.evantemplate.cats.repositories.CatsRepository
 import com.evantemplate.cats.repositories.NetCatsRepository
-import io.reactivex.Completable
-import io.reactivex.schedulers.Schedulers
 
 class Interactor(
     private val netRepo: NetCatsRepository,
     private val dbRepo: CatsRepository,
 
 ) {
-    val list = mutableListOf<Cat>()
+    val catList = mutableListOf<Cat>()
 
     fun getAllCats() = netRepo.loadAllCats()
-        .doOnNext {  list.addAll(it) }
-        .map { list }
+        .doOnNext {  catList.addAll(it) }
+        .map { catList }
 
     fun addToFavorite(cat: Cat) = dbRepo.addToFavorites(Cat(cat.id, cat.imgUrl, isInFavorites = true))
 

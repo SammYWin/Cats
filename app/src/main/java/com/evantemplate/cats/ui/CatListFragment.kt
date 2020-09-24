@@ -1,9 +1,15 @@
 package com.evantemplate.cats.ui
 
+import android.Manifest
+import android.app.DownloadManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import com.evantemplate.cats.R
 import com.evantemplate.cats.adapters.CatListAdapter
 import com.evantemplate.cats.database.CatDatabase
@@ -30,9 +36,15 @@ class CatListFragment: MvpAppCompatFragment(), CatListView {
 
         adapter = CatListAdapter(
             { isOnLastPosition -> if (isOnLastPosition) presenter.loadCats() },
-            { cat ->
-                if(!cat.isInFavorites) presenter.addToFavoritesBtnPressed(cat)
-            else presenter.deleteFromFavorite(cat)}
+            { btn, cat ->
+                if(btn.id == R.id.btn_fav){
+                    if(!cat.isInFavorites) presenter.addToFavoritesBtnPressed(cat)
+                    else presenter.deleteFromFavorite(cat)
+                } else{
+                    val manager: DownloadManager by lazy { requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager }
+                    presenter.downloadImage(manager, cat.imgUrl)
+                }
+            }
         )
 
         rootView.rv_cats_all.adapter = adapter

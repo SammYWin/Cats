@@ -1,5 +1,7 @@
 package com.evantemplate.cats.ui
 
+import android.app.DownloadManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +30,16 @@ class FavoriteCatsListFragment: MvpAppCompatFragment(), FavoriteCatListView {
         val rootView = inflater.inflate(R.layout.fragment_favorite_cats_list, container, false)
 
         adapter = CatListAdapter({},
-            {cat ->  presenter.deleteCatFromFav(cat)})
+            {btn, cat ->
+                if(btn.id == R.id.btn_fav){
+                    presenter.deleteCatFromFav(cat)}
+                else {
+                        val manager: DownloadManager by lazy { requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager }
+                        presenter.downloadImage(manager, cat.imgUrl)
+                }
+            }
+        )
+
 
         rootView.rv_cats_favorite.adapter = adapter
 

@@ -12,7 +12,7 @@ import com.evantemplate.cats.R
 import com.evantemplate.cats.models.Cat
 import kotlinx.android.synthetic.main.item_cat.view.*
 
-class CatListAdapter(val isOnLastPosition: (Boolean) -> Unit, val onClick: (Cat) -> Unit) :
+class CatListAdapter(val isOnLastPosition: (Boolean) -> Unit, val onClick: (View, Cat) -> Unit) :
     RecyclerView.Adapter<CatListAdapter.CatViewHolder>() {
 
     var items: List<Cat> = listOf()
@@ -48,7 +48,7 @@ class CatListAdapter(val isOnLastPosition: (Boolean) -> Unit, val onClick: (Cat)
         }
 
         holder.itemView.btn_fav.setOnClickListener {
-            onClick(cat)
+            onClick(it.btn_fav, cat)
 
             if (!cat.isInFavorites) {
                 Glide.with(holder.itemView.btn_fav.context)
@@ -60,9 +60,12 @@ class CatListAdapter(val isOnLastPosition: (Boolean) -> Unit, val onClick: (Cat)
                     .load(img)
                     .into(holder.itemView.btn_fav)
                 if ((it.parent.parent as View).id == R.id.rv_cats_all)
-                   // it.btn_fav.text = it.context.getString(R.string.btn_text_favorite)
                 cat.isInFavorites = !cat.isInFavorites
             }
+        }
+
+        holder.itemView.btn_download.setOnClickListener{
+            onClick(it.btn_download, cat)
         }
 
         isOnLastPosition(position == itemCount - 1)
@@ -81,7 +84,7 @@ class CatListAdapter(val isOnLastPosition: (Boolean) -> Unit, val onClick: (Cat)
     }
 
     class CatViewHolder(convertView: View) : RecyclerView.ViewHolder(convertView) {
-        fun bind(cat: Cat, onClick: (Cat) -> Unit) {
+        fun bind(cat: Cat, onClick: (View, Cat) -> Unit) {
             Glide.with(itemView.iv_cat.context)
                 .load(cat.imgUrl)
                 .apply(
@@ -91,9 +94,9 @@ class CatListAdapter(val isOnLastPosition: (Boolean) -> Unit, val onClick: (Cat)
                 )
                 .into(itemView.iv_cat)
 
-            itemView.btn_fav.setOnClickListener {
-                onClick(cat)
-            }
+//            itemView.btn_fav.setOnClickListener {
+//                onClick(cat)
+//            }
         }
     }
 }
