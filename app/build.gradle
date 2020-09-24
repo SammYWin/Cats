@@ -84,5 +84,14 @@ dependencies {
     implementation "com.github.moxy-community:moxy-androidx:$version_moxy"
     kapt "com.github.moxy-community:moxy-compiler:$version_moxy"
 
+    //Gson converter
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    //Dagger2
+    def version_dagger = "2.29.1"
+    implementation "com.google.dagger:dagger:$version_dagger"
+    kapt "com.google.dagger:dagger-compiler:$version_dagger"
+    implementation "com.google.dagger:dagger-android:$version_dagger"
+    implementation "com.google.dagger:dagger-android-support:$version_dagger"
+    kapt "com.google.dagger:dagger-android-processor:$version_dagger"
 }

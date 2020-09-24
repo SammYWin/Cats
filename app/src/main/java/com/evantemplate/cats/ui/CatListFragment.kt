@@ -12,24 +12,52 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.evantemplate.cats.R
 import com.evantemplate.cats.adapters.CatListAdapter
+import com.evantemplate.cats.database.CatDao
 import com.evantemplate.cats.database.CatDatabase
+import com.evantemplate.cats.di.AppModule
+import com.evantemplate.cats.di.DaggerAppComponent
 import com.evantemplate.cats.interactors.Interactor
 import com.evantemplate.cats.models.Cat
 import com.evantemplate.cats.network.CatApi
 import com.evantemplate.cats.presenters.CatListPresenter
 import com.evantemplate.cats.repositories.DbCatsRepository
 import com.evantemplate.cats.repositories.NetCatsRepository
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_cat_list.view.*
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
+import javax.inject.Inject
 
 
 class CatListFragment: MvpAppCompatFragment(), CatListView {
 
+    @Inject
+    lateinit var presenterlazy: dagger.Lazy<CatListPresenter>
+
     @InjectPresenter
     lateinit var presenter: CatListPresenter
     lateinit var adapter: CatListAdapter
+
+    @ProvidePresenter
+    fun providePresenter(): CatListPresenter{
+
+        DaggerAppComponent.builder()
+            .appModule(AppModule(requireContext()))
+            .build()
+            .inject(this)
+
+        return presenterlazy.get()
+    }
+
+//    @Inject
+//    lateinit var dataBase: CatDao
+
+//    @Inject
+//    lateinit var dbCatsRepository: DbCatsRepository
+
+//    @Inject
+//    lateinit var netCatsRepository: NetCatsRepository
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_cat_list, container, false)
@@ -54,18 +82,5 @@ class CatListFragment: MvpAppCompatFragment(), CatListView {
 
     override fun showAllCats(catList: List<Cat>) {
         adapter.updateData(catList)
-    }
-
-    @ProvidePresenter
-    fun providePresenter(): CatListPresenter{
-        val application = requireContext()
-        val dataBase = CatDatabase.getInstance(application).catDao
-
-        val netCatsRepository = NetCatsRepository(CatApi.retrofitService)
-        val dbCatsRepository = DbCatsRepository(dataBase)
-
-        val interactor = Interactor(netCatsRepository, dbCatsRepository)
-
-        return CatListPresenter(interactor)
     }
 }

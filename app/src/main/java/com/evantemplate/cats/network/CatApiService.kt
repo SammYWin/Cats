@@ -48,19 +48,3 @@ object CatApi{
     }
 }
 
-
-interface DownloadCatApiService{
-    @GET("images/e27.jpg")
-    fun downloadImg(): Call<ResponseBody>
-}
-
-val retrofitImg = Retrofit.Builder()
-    .baseUrl("https://cdn2.thecatapi.com/")
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .build()
-
-object ImgCatApi{
-    val retrofitService: DownloadCatApiService by lazy {
-        retrofitImg.create(DownloadCatApiService::class.java)
-    }
-}

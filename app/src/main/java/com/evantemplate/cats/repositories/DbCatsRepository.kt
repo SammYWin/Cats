@@ -6,6 +6,7 @@ import com.evantemplate.cats.models.Cat
 import com.evantemplate.cats.database.CatEntity
 import io.reactivex.Completable
 import io.reactivex.Single
+import javax.inject.Inject
 
 
 interface CatsRepository {
@@ -14,7 +15,9 @@ interface CatsRepository {
     fun deleteFromFavorites(cat: Cat): Completable
 }
 
-class DbCatsRepository(val dataBase: CatDao) : CatsRepository {
+class DbCatsRepository @Inject constructor(
+    val dataBase: CatDao
+) : CatsRepository {
     override fun loadFavCats(): Single<List<Cat>> = dataBase.getAllFavoriteCats()
         .map { list -> list.map{ Cat(it.id, it.imgUrl, it.isInFavorites) } }
 

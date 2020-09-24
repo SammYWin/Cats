@@ -20,9 +20,12 @@ import moxy.MvpPresenter
 import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
+import javax.inject.Inject
 
 @InjectViewState
-class CatListPresenter(val interactor: Interactor) : MvpPresenter<CatListView>() {
+class CatListPresenter @Inject constructor(
+    val interactor: Interactor
+) : MvpPresenter<CatListView>() {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     override fun onFirstViewAttach() {
