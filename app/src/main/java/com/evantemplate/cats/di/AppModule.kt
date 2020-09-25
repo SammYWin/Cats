@@ -1,7 +1,9 @@
 package com.evantemplate.cats.di
 
 import android.app.Application
+import android.app.DownloadManager
 import android.content.Context
+import android.webkit.DownloadListener
 import com.evantemplate.cats.database.CatDao
 import com.evantemplate.cats.database.CatDatabase
 import com.evantemplate.cats.models.Cat
@@ -16,13 +18,15 @@ import dagger.Provides
 class AppModule(
     val context: Context
 ) {
-
     @Provides
-    fun provideDB(): CatDao = CatDatabase.getInstance(this.context).catDao
+    fun provideDB(): CatDao = CatDatabase.getInstance(context).catDao
 
     @Provides
     fun provideDbCatsRepository(catDao: CatDao): CatsRepository = DbCatsRepository(catDao)
 
     @Provides
     fun provideNetCatRepo(): NetCatsRepository = NetCatsRepository(CatApi.retrofitService)
+
+    @Provides
+    fun provideDownloadManager(): DownloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 }

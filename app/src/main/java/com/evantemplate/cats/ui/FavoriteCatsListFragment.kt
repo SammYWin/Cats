@@ -51,13 +51,10 @@ class FavoriteCatsListFragment: MvpAppCompatFragment(), FavoriteCatListView {
                 if(btn.id == R.id.btn_fav){
                     presenter.deleteCatFromFav(cat)}
                 else {
-                        val manager: DownloadManager by lazy { requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager }
-                        presenter.downloadImage(manager, cat.imgUrl)
+                    presenter.downloadImage(cat.imgUrl)
                 }
             }
         )
-
-
         rootView.rv_cats_favorite.adapter = adapter
 
         return rootView

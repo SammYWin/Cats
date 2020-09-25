@@ -4,6 +4,7 @@ import android.app.DownloadManager
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import com.evantemplate.cats.extensions.md5
 import com.evantemplate.cats.interactors.Interactor
 import com.evantemplate.cats.models.Cat
 import com.evantemplate.cats.ui.FavoriteCatListView
@@ -55,26 +56,8 @@ class FavoriteCatListPresenter @Inject constructor(val interactor: Interactor
             }
     }
 
-    fun downloadImage(manager: DownloadManager, imgUrl: String) {
-        val url = imgUrl
-        val request = DownloadManager.Request(Uri.parse(url))
-        val extension = url.substring(url.lastIndexOf("."))
-
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-        request.setTitle(url.md5())
-        request.setDescription("cat image")
-
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        request.setDestinationInExternalPublicDir(
-            Environment.DIRECTORY_DOWNLOADS,
-            url.md5() + extension
-        )
-        manager.enqueue(request)
-    }
-
-    fun String.md5(): String {
-        val md = MessageDigest.getInstance("MD5")
-        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
+    fun downloadImage(imgUrl: String) {
+        interactor.downloadImage(imgUrl)
     }
 
     override fun onDestroy() {

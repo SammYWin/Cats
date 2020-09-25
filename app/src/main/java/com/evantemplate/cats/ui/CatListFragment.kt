@@ -50,8 +50,7 @@ class CatListFragment: MvpAppCompatFragment(), CatListView {
                     if(!cat.isInFavorites) presenter.addToFavoritesBtnPressed(cat)
                     else presenter.deleteFromFavorite(cat)
                 } else{
-                    val manager: DownloadManager by lazy { requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager }
-                    presenter.downloadImage(manager, cat.imgUrl)
+                    presenter.downloadImage(cat.imgUrl)
                 }
             }
         )
