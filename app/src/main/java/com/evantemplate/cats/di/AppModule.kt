@@ -14,13 +14,14 @@ import dagger.Provides
 
 @Module
 class AppModule(
-    context: Context
+    val context: Context
 ) {
 
-    private val database: CatDao = CatDatabase.getInstance(context).catDao
+    @Provides
+    fun provideDB(): CatDao = CatDatabase.getInstance(this.context).catDao
 
     @Provides
-    fun provideDbCatsRepository(): CatsRepository = DbCatsRepository(database)
+    fun provideDbCatsRepository(catDao: CatDao): CatsRepository = DbCatsRepository(catDao)
 
     @Provides
     fun provideNetCatRepo(): NetCatsRepository = NetCatsRepository(CatApi.retrofitService)
